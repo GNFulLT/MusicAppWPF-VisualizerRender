@@ -36,7 +36,6 @@ namespace MusicApp.MVVM.ViewModel
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             renderer.Render();
 
-
         }
     }
 }

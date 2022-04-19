@@ -71,7 +71,7 @@ namespace MusicApp.Core.Rendering
             if (isCompiled == 0)
             {
                 throw new Exception
-                    ($"There is an error while trying to compile vertex shader : {GL.GetShaderInfoLog(fragShader)}");
+                    ($"There is an error while trying to compile fragment shader : {GL.GetShaderInfoLog(fragShader)}");
             }
 
             _program = GL.CreateProgram();
@@ -150,6 +150,31 @@ namespace MusicApp.Core.Rendering
         public void DisableTexturing()
         {
             SetInt("isTextureLoaded", 0);
+        }
+
+        public void EnableLighting()
+        {
+            SetInt("isLightLoaded", 1);
+        }
+        public void DisableLighting()
+        {
+            SetInt("isLightLoaded", 0);
+        }
+
+        public void UseLighting(Light light)
+        {
+            SetVector3("lightColor", light.GetColor());
+            SetFloat("light.ambientStrength", light.GetAmbientStrength());
+            SetFloat("light.specularStrength", light.GetSpecularStrength());
+            SetFloat("light.shiness", light.shiness);
+            SetFloat("light.atten0", light.atten0);
+            SetFloat("light.atten1", light.atten1);
+            SetFloat("light.atten2", light.atten2);
+            SetVector3("lightPos", light.GetPosition());
+            SetVector3("viewPos", new Vector3(GLGlobals.GetCamera().GetPosition()));
+            SetMatrix4("model", Matrix4.Identity);
+            SetMatrix4("view", GLGlobals.GetCamera().GetViewMatrix());
+            SetMatrix4("projection", GLGlobals.GetCamera().GetProjectionMatrix());
         }
 
         ~Shader()

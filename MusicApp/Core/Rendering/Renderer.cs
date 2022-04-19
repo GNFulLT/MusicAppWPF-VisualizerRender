@@ -15,9 +15,6 @@ namespace MusicApp.Core.Rendering
         private Vector2 _initialPos;
         private Background background;
         private List<IDrawable> drawables;
-        
-        
-
         public Renderer(Vector2 topLeft, Vector2 size)
         {
             _topLeft = topLeft;
@@ -27,6 +24,7 @@ namespace MusicApp.Core.Rendering
             background = new Background(topLeft, size);
             drawables = new List<IDrawable>();
             drawables.Add(background);
+           
         }
 
         public void Render()
@@ -49,21 +47,27 @@ namespace MusicApp.Core.Rendering
             private Vector2 _initialPos;
             private uint _textureID = 0;
             private Vector4 _color;
+            private Light _light0;
 
 
             private int VAO;
             private int VBO;
             private int EBO;
             private int TBO;
+            private int NBO;
+            Camera cam;
 
             public Background(Vector2 topLeft,Vector2 size)
             {
+                cam = GLGlobals.GetCamera();
                 _topLeft = topLeft;
                 _size = size;
                 _initialSize = size;
                 _initialPos = topLeft;
                 _color = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 
+                _light0 = new Light(new Vector3(0.5f, 0f,-1f), new Vector3(1, 1, 1),0.3f,0.8f);
+                GLGlobals.light0 = _light0;
                 VAO = GL.GenVertexArray();
                 GL.BindVertexArray(VAO);
 
@@ -86,21 +90,32 @@ namespace MusicApp.Core.Rendering
                 GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 0, 0);
                 GL.EnableVertexAttribArray(1);
 
+                NBO = GL.GenBuffer();
+                var _normalizedData = GetNormalizedCoord();
+                GL.BindBuffer(BufferTarget.ArrayBuffer, NBO);
+                GL.BufferData(BufferTarget.ArrayBuffer, _normalizedData.Length * sizeof(float),
+                    _normalizedData, BufferUsageHint.StaticDraw);
+                GL.VertexAttribPointer(2, 3, VertexAttribPointerType.Float, false, 0, 0);
+                GL.EnableVertexAttribArray(2);
 
             }
 
             public void BindTexture(string path)
             {
                 _textureID = TextureHandler.LoadTexture(path);
+
             }
 
             public  void Draw()
             {
                 GLGlobals.GetCurrentShader().Use();
                 GLGlobals.GetCurrentShader().EnableTexturing();
+                GLGlobals.GetCurrentShader().EnableLighting();
+                GLGlobals.GetCurrentShader().UseLighting(_light0);
                 GL.BindVertexArray(VAO);
                 TextureHandler.UseTexture2D(TextureUnit.Texture0, _textureID);
                 GLGlobals.GetCurrentShader().SetVector4("aColor",_color);
+
                 GL.DrawElements(BeginMode.Triangles,
                     GetElements().Length, DrawElementsType.UnsignedInt, 0);
                 GL.BindTexture(TextureTarget.Texture2D,0);
@@ -119,6 +134,15 @@ namespace MusicApp.Core.Rendering
                 }; 
             }
 
+            private float[] GetNormalizedCoord()
+            {
+                return new float[]
+                {
+                    0.0f,0.0f,1.0f,
+                    0.0f,0.0f,1.0f,
+                    0.0f,0.0f,1.0f
+                };
+            }
             private float[] GetTextureCoord()
             {
                 return new float[]
