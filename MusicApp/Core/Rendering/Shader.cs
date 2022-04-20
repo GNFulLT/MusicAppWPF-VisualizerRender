@@ -161,16 +161,24 @@ namespace MusicApp.Core.Rendering
             SetInt("isLightLoaded", 0);
         }
 
-        public void UseLighting(Light light)
+        public void UseLighting(Light light,Light.LightType type)
         {
-            SetVector3("lightColor", light.GetColor());
-            SetFloat("light.ambientStrength", light.GetAmbientStrength());
-            SetFloat("light.specularStrength", light.GetSpecularStrength());
-            SetFloat("light.shiness", light.shiness);
-            SetFloat("light.atten0", light.atten0);
-            SetFloat("light.atten1", light.atten1);
-            SetFloat("light.atten2", light.atten2);
-            SetVector3("lightPos", light.GetPosition());
+            string name = Light.GetLightName(type);
+
+
+            SetVector3(name+".lightColor", light.GetColor());
+            SetFloat(name+".ambientStrength", light.GetAmbientStrength());
+            SetFloat(name+".specularStrength", light.GetSpecularStrength());
+            SetFloat(name+".shiness", light.shiness);
+            SetFloat(name+".atten0", light.atten0);
+            SetFloat(name+".atten1", light.atten1);
+            SetFloat(name+".atten2", light.atten2);
+            SetVector3(name+".lightPos", light.GetPosition());
+            
+        }
+
+        public void UseMatrixes()
+        {
             SetVector3("viewPos", new Vector3(GLGlobals.GetCamera().GetPosition()));
             SetMatrix4("model", Matrix4.Identity);
             SetMatrix4("view", GLGlobals.GetCamera().GetViewMatrix());

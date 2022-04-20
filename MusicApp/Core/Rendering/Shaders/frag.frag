@@ -8,13 +8,14 @@ out vec4 outputColor;
 
 uniform int isTextureLoaded = 0;
 uniform int isLightLoaded = 0;
-uniform vec3 lightColor;
-uniform vec3 lightPos;
 uniform vec3 viewPos;
 
 //For Light
 struct LightDependencies{
     float shiness;
+
+    vec3 lightPos;
+    vec3 lightColor;
 
     float ambientStrength;
     float specularStrength;
@@ -24,7 +25,12 @@ struct LightDependencies{
     float atten2;
 };
 
-uniform LightDependencies light;
+//I will use just 5 light so we don't need to create an array
+uniform LightDependencies light0;
+uniform LightDependencies light1;
+uniform LightDependencies light2;
+uniform LightDependencies light3;
+uniform LightDependencies light4;
 
 in vec4 vertexColor;
 in vec2 TexCoord;
@@ -33,6 +39,57 @@ in vec3 Position;
 in vec3 FragPos;
 
 uniform sampler2D Tex0;
+
+vec4 GetLightInfos(LightDependencies light0){
+
+    vec3 lightDir = normalize(light0.lightPos-FragPos);
+ 
+    //Ambient
+
+    vec3 ambient = light0.ambientStrength * light0.lightColor;
+
+    //Diffuse
+    vec3 norm = normalize(Normal);
+    float diff = max(dot(norm,lightDir),0.0f);
+    vec3 diffuse = diff * light0.lightColor;
+
+    //Specular    
+    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 reflectDir = reflect(-lightDir,norm);
+
+    float spec = pow(max(dot(viewDir,reflectDir),0.0),light0.shiness);
+   
+    vec3 specular = light0.lightColor * light0.specularStrength * spec*5;   
+
+    //Attenuation
+
+    float distance = length(light0.lightPos - FragPos);
+
+    float attenuation = light0.atten0/(light0.atten1*distance +light0.atten2 * (distance*distance));
+
+    if(isTextureLoaded == 1){
+    vec4 texColor = texture(Tex0,TexCoord);
+    vec4 ambient2 = texColor * vec4(ambient,1.0f);
+    vec4 diffuse2 = texColor * vec4(diffuse,1.0f);
+    vec4 specular2 = texColor * vec4(specular,1.0f);
+   
+
+    ambient2 *= attenuation;
+    diffuse2 *= attenuation;
+    specular2 *= attenuation;
+
+    return (specular2+ambient2+diffuse2);
+    
+    }else{
+    ambient *= attenuation;
+    diffuse *= attenuation;
+    specular *= attenuation;
+    return vec4((specular+diffuse+ambient),1.0f);
+    }
+
+
+}
+
 
 void main()
 {
@@ -50,52 +107,8 @@ void main()
     }
     else{
 
-
-    vec3 lightDir = normalize(lightPos-FragPos);
-
-    //Ambient
-    vec3 ambient = light.ambientStrength * lightColor;
-    //Diffuse
-
-    vec3 norm = normalize(Normal);
-    float diff = max(dot(norm,lightDir),0.0f);
-    vec3 diffuse = diff * lightColor;
-    //Specular    
-    vec3 viewDir = normalize(viewPos - FragPos);
-    float a = 1;
-    if (dot(norm, viewDir) < 0.0){
-    norm = -norm;
-    }
-
-    vec3 reflectDir = reflect(-lightDir,norm);
-    if(max(dot(viewDir,reflectDir),0.0) == 0){
-    }
-   
-    float spec = pow(max(dot(viewDir,reflectDir),0.0),light.shiness);
-   
-    vec3 specular = lightColor * light.specularStrength * spec*5;   
-
-    float distance = length(lightPos - FragPos);
-
-    float attenuation = light.atten0/(light.atten1*distance +light.atten2 * (distance*distance)); 
-
-     if(isTextureLoaded == 1){
-     
-    vec4 texColor = texture(Tex0,TexCoord);
-    vec4 ambient2 = texColor * vec4(ambient*a,1.0f);
-    vec4 diffuse2 = texColor * vec4(diffuse*a,1.0f);
-    vec4 specular2 = texColor * vec4(specular*a,1.0f);
-   
-
-    ambient2 *= attenuation;
-    diffuse2 *= attenuation;
-    specular2 *= attenuation;
-
-    outputColor = (specular2+ambient2+diffuse2);
-    }
-    else{
-        outputColor = vertexColor; 
-    }
+    outputColor = GetLightInfos(light0) + GetLightInfos(light1) + GetLightInfos(light2) + GetLightInfos(light3) + GetLightInfos(light4);
+        
 
     }
 	

@@ -7,9 +7,10 @@
         xmlns:glWpfControl="clr-namespace:OpenTK.Wpf;assembly=GLWpfControl"
         xmlns:viewModel="clr-namespace:MusicApp.MVVM.ViewModel"
         mc:Ignorable="d"
-   
+        ResizeMode="NoResize"
 
-        Title="MusicWindow" Height="450" Width="800">
+        Title="MusicWindow" 
+        Height="720" Width="1280">
     <Window.DataContext>
         <viewModel:MusicWindowViewModel>
         </viewModel:MusicWindowViewModel>
@@ -22,71 +23,37 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="19*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <glWpfControl:GLWpfControl
             x:Name="glControl"
             Grid.Column="1"
             Grid.ColumnSpan="2"
             Grid.Row="0"
-            Grid.RowSpan="2"
+            Grid.RowSpan="3"
             Render="OnRendering"
            />
-        <Button 
-  Content="Sola"
-  HorizontalAlignment="Center" Margin="0,382,0,0" Grid.Row="1" VerticalAlignment="Top" Click="Button_Click"/>
-        <Button 
-            Content="Sağa"
-            HorizontalAlignment="Center" Margin="0,354,0,0" Grid.Row="1" VerticalAlignment="Top" Click="Button_Click_1"/>
-        <Button 
-            Content="Atten0+"
-            HorizontalAlignment="Right" Margin="0,221,0,0" Grid.Row="1" VerticalAlignment="Top" Click="Button_Click_8"/>
-        <Button 
-            Content="Atten1+"
-            HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" Click="Button_Click_10"/>
-        <Button 
-            Content="Atten2+"
-            HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top" Margin="0,170,0,0" Click="Button_Click_12"/>
-        <Button 
-            Content="Shi+"
-            HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top" Margin="0,151,0,0" RenderTransformOrigin="0.274,-4.749" Click="Button_Click_7" Height="18" Width="16"/>
-        <Button 
-            Content="Shi-"
-            HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top" Margin="0,57,0,0" Click="Button_Click_6"/>
-        <Button 
-            Content="Atten0-"
-            HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top" Margin="0,31,0,0" Click="Button_Click_9"/>
-        <Button 
-            Content="Atten1-"
-            HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top" Margin="0,6,0,0" Click="Button_Click_11"/>
-        <Button 
-            Content="Atten2-"
-            HorizontalAlignment="Center"
-            Margin="0,1,0,0" Height="20" VerticalAlignment="Top" Click="Button_Click_13"/>
-        <Button 
-            Content="Yukarı"
-            HorizontalAlignment="Center" Margin="0,327,0,0" Grid.Row="1" VerticalAlignment="Top" Click="Button_Click_3"/>
-        <Button 
-            Content="Aşağı"
-            HorizontalAlignment="Center" Margin="0,298,0,0" Grid.Row="1" VerticalAlignment="Top" Click="Button_Click_2"/>
-        <Button 
-            Content="İçeri"
-            HorizontalAlignment="Center" 
-            Margin="0,271,0,0"
+        <WrapPanel 
+            MouseLeave="OnInteractBottomPanel"
+            MouseEnter="OnInteractBottomPanel"
+            Opacity="0"
+            Background="Black"
+            Grid.Column="1"
             Grid.Row="1"
-            VerticalAlignment="Top" Click="Button_Click_4"
-            
-            />
-        <Button 
-            Content="Dışarı"
-            HorizontalAlignment="Center" 
-            Margin="0,246,0,0"
-            Grid.Row="1"
-            VerticalAlignment="Top" Click="Button_Click_5"
-            
-            />
-        <Button Content="Ambiense+" HorizontalAlignment="Center" Margin="0,82,0,0" Grid.Row="1" VerticalAlignment="Top" Click="Button_Click_14"/>
-        <Button Content="Specular+" HorizontalAlignment="Center" Margin="0,102,0,0" Grid.Row="1" VerticalAlignment="Top" Click="Button_Click_15"/>
-        <Button Content="Ambiense-" HorizontalAlignment="Center" Margin="0,122,0,0" Grid.Row="1" VerticalAlignment="Top" Click="Button_Click_16"/>
-        <Button Content="Specular-" HorizontalAlignment="Left" Margin="18,150,0,0" Grid.Row="1" VerticalAlignment="Top" Height="20" Width="20" Click="Button_Click_17"/>
+            Height="100" 
+            Grid.RowSpan="2"
+            Margin="0,599,0,-29"
+            >
+            <Button Height="34" 
+                    Margin="500 30 0 0" 
+                    Width="150"
+                    
+                    />
+            <WrapPanel.RenderTransform>
+                <TranslateTransform Y="0">
+
+                </TranslateTransform>
+            </WrapPanel.RenderTransform>
+        </WrapPanel>
     </Grid>
 </Window>

@@ -9,6 +9,11 @@ namespace MusicApp.Core.Rendering
 {
     public class Light
     {
+        public enum LightType
+        {
+            light0,light1,light2,light3,light4
+        }
+
         private Vector3 _pos;
         private Vector3 _color;
         private float _ambientStrength;
@@ -74,6 +79,35 @@ namespace MusicApp.Core.Rendering
         public Vector3 GetPosition()
         {
             return _pos;
+        }
+
+        public static string GetLightName(LightType type)
+        {
+            switch (type)
+            {
+                case LightType.light0:
+                {
+                    return nameof(LightType.light0);
+                }
+                case LightType.light1:
+                    {
+                        return nameof(LightType.light1);
+                    }
+                case LightType.light2:
+                    {
+                        return nameof(LightType.light2);
+                    }
+                case LightType.light3:
+                    {
+                        return nameof(LightType.light3);
+                    }
+                case LightType.light4:
+                    {
+                        return nameof(LightType.light4);
+                    }
+                default:
+                    throw new Exception("There is no light type like this");
+            }
         }
         
     }

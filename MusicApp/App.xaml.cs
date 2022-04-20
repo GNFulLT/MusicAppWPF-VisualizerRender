@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Globalization;
+using System.Threading;
 using System.Windows;
 
 namespace MusicApp
@@ -15,6 +12,7 @@ namespace MusicApp
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
             StartupUri = new Uri("/MusicApp;component/MVVM/View/MusicWindow.xaml",UriKind.Relative);
         }
     }
